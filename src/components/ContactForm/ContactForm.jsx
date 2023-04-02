@@ -46,7 +46,7 @@ export default function ContactForm({ onSubmit }) {
     ) {
       setName('');
       setNumber('');
-      return alert(`Number: ${data.name} is already in phonebook list!`);
+      return alert(`Contact ${data.name} is already in phonebook list!`);
     }
     dispatch(addContact(data));
     setName('');
