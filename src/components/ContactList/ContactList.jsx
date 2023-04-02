@@ -1,30 +1,28 @@
-import PropTypes from 'prop-types';
+import { useSelector } from 'react-redux';
 import ContactsListItem from 'components/ContactListItem/ContactListItem';
-import { ContactUl } from './ContactList.styled';
+import { ContactUl, EmptyContactText } from './ContactList.styled';
 
-const ContactList = ({ contacts, onDeleteContact }) => (
-  <ContactUl>
-    {contacts.map(({ id, name, number }) => (
-      <ContactsListItem
-        key={id}
-        id={id}
-        name={name}
-        number={number}
-        onDeleteContact={onDeleteContact}
-      />
-    ))}
-  </ContactUl>
-);
+const getAvailableContacts = (items, filter) =>
+  items.filter(contact =>
+    contact.name.toLowerCase().includes(filter.toLowerCase())
+  );
 
-ContactList.propTypes = {
-  contacts: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string.isRequired,
-      name: PropTypes.string.isRequired,
-      number: PropTypes.string.isRequired,
-    })
-  ),
-  onDeleteContact: PropTypes.func.isRequired,
+const ContactList = () => {
+  const items = useSelector(state => state.contacts.items);
+  const filter = useSelector(state => state.contacts.filter);
+  const contacts = getAvailableContacts(items, filter);
+
+  return (
+    <ContactUl>
+      {contacts.length ? (
+        contacts.map(({ id, name, number }) => (
+          <ContactsListItem key={id} id={id} name={name} number={number} />
+        ))
+      ) : (
+        <EmptyContactText>No contacts</EmptyContactText>
+      )}
+    </ContactUl>
+  );
 };
 
 export default ContactList;
